@@ -120,7 +120,7 @@ def convert_vcf_to_parquet(
                 df = None  # Reset for next batch
 
             # Log progress every 100k variants
-            if variant_count % 100_000 == 0:
+            if variant_count % 1_000_000 == 0:
                 logger.info(f"Progress: {variant_count:,} variants processed")
                 gc.collect()
 

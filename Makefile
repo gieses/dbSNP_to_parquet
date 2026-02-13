@@ -10,7 +10,7 @@ help:
 	@echo "  test          - Run tests with pytest"
 	@echo "  pixi  - Install dependencies with pixi"
 	@echo "  publish       - Build and publish to PyPI"
-	@echo "  download       - Download dbSNP and build database"
+	@echo "  dbsnp       - Download dbSNP and build database"
 
 # Build the package
 build: clean
@@ -55,5 +55,5 @@ publish: build
 	fi
 
 # Download dbSNP
-download:
+dbsnp:
 	pyvariantdb-download && pyvariantdb-make-dbsnp

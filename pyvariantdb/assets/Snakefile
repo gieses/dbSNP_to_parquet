@@ -27,6 +27,9 @@ Usage Examples:
 """
 import yaml
 from importlib.resources import files
+from loguru import logger
+
+from pyvariantdb.const import get_cache_dir
 
 pyvariant_assets_dir = files("pyvariantdb") / "assets"
 pyvariant_contigs = pyvariant_assets_dir / "contig_map.tsv"
@@ -39,7 +42,11 @@ if not config:
 
 CHROMS = [f"chr{x}" for x in range(1,23)] + ['chrX']
 
-print(CHROMS)
+config["output_dir"] = get_cache_dir()
+
+logger.info("Starting snakemake workflow from pyvariantdb to download variants.")
+for conf_key, conf_value in config.items():
+    logger.info(f"{conf_key}: {conf_value}")
 
 rule all:
     input:
@@ -50,7 +57,7 @@ rule all:
 
 rule convert_contig:
     input:
-        "GCF_000001405.40.gz"
+        f"{config['output_dir']}/GCF_000001405.40.gz"
     output:
         f"{config['output_dir']}/dbSNP_156.bcf"
     threads: config['resources']['convert_contig']['threads']
@@ -102,9 +109,9 @@ rule combine_all_parquets:
     output:
         f"{config['output_dir']}/dbSNP_156.combined.lookup.parquet"
     resources:
-        mem=config['resources'].get('combine_all_parquets', {}).get('mem', '16G'),
+        mem=config['resources'].get('combine_all_parquets',{}).get('mem','16G'),
         partition=config['cluster']['partition'],
-        time=config['resources'].get('combine_all_parquets', {}).get('time', '02:00:00')
+        time=config['resources'].get('combine_all_parquets',{}).get('time','02:00:00')
     run:
         import pyarrow.parquet as pq
         import pyarrow as pa
@@ -119,4 +126,4 @@ rule combine_all_parquets:
         combined_table = pa.concat_tables(tables)
 
         # Write the combined table
-        pq.write_table(combined_table, output[0])
+        pq.write_table(combined_table,output[0])

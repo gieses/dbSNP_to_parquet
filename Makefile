@@ -1,4 +1,7 @@
-.PHONY: help build install clean format lint test pixi-install pixi-update publish publish-test all
+# docs for developers:
+# make a release:
+# gh release create TAG
+.PHONY: help buiod clean ruff test pixi publish dbsnp
 
 # Default target
 help:

@@ -35,6 +35,7 @@ snakemake = "*"
 pyarrow = "*"
 ipython = "*"
 loguru = "*"
+aria2 = "*"
 
 [tool.pixi.pypi-dependencies]
 pyvariantdb = { path = ".", editable = true}

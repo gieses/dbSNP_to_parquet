@@ -21,10 +21,16 @@ from importlib.resources import files
 
 def main():
     """Run Snakemake pipeline with specified parameters."""
-    parser = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
+    parser = argparse.ArgumentParser(
+        description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter
+    )
 
-    parser.add_argument("-j", "--jobs", type=int, default=1, help="Number of jobs (default: 1)")
-    parser.add_argument("-c", "--cores", type=int, help="Number of cores (alternative to --jobs)")
+    parser.add_argument(
+        "-j", "--jobs", type=int, default=1, help="Number of jobs (default: 1)"
+    )
+    parser.add_argument(
+        "-c", "--cores", type=int, help="Number of cores (alternative to --jobs)"
+    )
     parser.add_argument("--config", type=str, help="Path to config YAML file")
 
     args = parser.parse_args()

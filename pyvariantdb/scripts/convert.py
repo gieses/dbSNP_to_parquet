@@ -19,10 +19,7 @@ from loguru import logger
 
 # Configuration constants
 DEFAULT_BATCH_SIZE = 500_000
-SCHEMA = pa.schema([
-    pa.field("RSID", pa.string()),
-    pa.field("ID", pa.string())
-])
+SCHEMA = pa.schema([pa.field("RSID", pa.string()), pa.field("ID", pa.string())])
 
 
 def setup_logging(debug: bool = False) -> None:
@@ -37,7 +34,7 @@ def setup_logging(debug: bool = False) -> None:
     logger.add(
         sys.stdout,
         format="<level>{time:YYYY-MM-DD HH:mm:ss}</level> | <level>{level: <8}</level> | <level>{message}</level>",
-        level=log_level
+        level=log_level,
     )
 
 
@@ -89,9 +86,7 @@ def process_variant(variant) -> Optional[dict]:
 
 
 def convert_vcf_to_parquet(
-    input_file: Path,
-    output_file: Path,
-    batch_size: int = DEFAULT_BATCH_SIZE
+    input_file: Path, output_file: Path, batch_size: int = DEFAULT_BATCH_SIZE
 ) -> None:
     """
     Convert a BCF/VCF file to Parquet format.
@@ -123,6 +118,7 @@ def convert_vcf_to_parquet(
 
                 # Convert row to Polars DataFrame
                 import polars as pl
+
                 row_df = pl.DataFrame(row_data)
 
                 # Initialize or append to batch dataframe
@@ -185,29 +181,20 @@ Examples:
   python convert_to_parquet.py input.bcf output.parquet
   python convert_to_parquet.py -b 1000000 input.vcf.gz output.parquet
   python convert_to_parquet.py --debug input.bcf output.parquet
-        """
+        """,
     )
 
+    parser.add_argument("input", type=str, help="Path to input BCF/VCF file")
+    parser.add_argument("output", type=str, help="Path to output Parquet file")
     parser.add_argument(
-        "input",
-        type=str,
-        help="Path to input BCF/VCF file"
-    )
-    parser.add_argument(
-        "output",
-        type=str,
-        help="Path to output Parquet file"
-    )
-    parser.add_argument(
-        "-b", "--batch-size",
+        "-b",
+        "--batch-size",
         type=int,
         default=DEFAULT_BATCH_SIZE,
-        help=f"Batch size for writing (default: {DEFAULT_BATCH_SIZE:,})"
+        help=f"Batch size for writing (default: {DEFAULT_BATCH_SIZE:,})",
     )
     parser.add_argument(
-        "-d", "--debug",
-        action="store_true",
-        help="Enable debug logging"
+        "-d", "--debug", action="store_true", help="Enable debug logging"
     )
 
     args = parser.parse_args()
@@ -225,9 +212,7 @@ Examples:
 
         # Perform conversion
         convert_vcf_to_parquet(
-            input_file=input_file,
-            output_file=output_file,
-            batch_size=args.batch_size
+            input_file=input_file, output_file=output_file, batch_size=args.batch_size
         )
 
         return 0

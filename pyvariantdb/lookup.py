@@ -43,7 +43,9 @@ class SNPLookup:
 
     def __init__(self, version: str = DEFAULT_VERSION, cache_dir: Optional[str] = None):
         self.version = version
-        self.cache_dir = Path(cache_dir) if cache_dir else get_cache_dir() / DEFAULT_OUTPUT_DIR
+        self.cache_dir = (
+            Path(cache_dir) if cache_dir else get_cache_dir() / DEFAULT_OUTPUT_DIR
+        )
 
     def query_all(self, rsids: list[str]) -> pl.DataFrame:
         """Query all lookup files for a list of rsIDs.
@@ -103,8 +105,6 @@ class SNPLookup:
             raise FileNotFoundError(f"dbSNP Parquet file not found: {in_file}")
 
         subset_df = (
-            pl.scan_parquet(in_file)
-            .filter(pl.col("RSID").is_in(rsids))
-            .collect()
+            pl.scan_parquet(in_file).filter(pl.col("RSID").is_in(rsids)).collect()
         )
         return subset_df

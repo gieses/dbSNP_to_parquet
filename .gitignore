@@ -17,6 +17,7 @@ env/
 secret
 dist/
 pyvariantdb.egg-info
+*.conda
 
 # Docker
 docker-compose.override.yml

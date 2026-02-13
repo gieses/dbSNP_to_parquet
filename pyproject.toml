@@ -45,7 +45,7 @@ aria2 = "*"
 pyvariantdb = { path = ".", editable = true}
 
 [project.optional-dependencies]
-test = ["pytest", "twine", "pre-commit", "pytest-ruff", "ruff"]
+test = ["pytest", "twine", "pre-commit", "pytest-ruff", "ruff", "grayskull"]
 prod = ["pyvariantdb"]
 all = ["pyvariantdb[test]"]
 

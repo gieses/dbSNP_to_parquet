@@ -28,7 +28,6 @@ from typing import Optional
 from pyvariantdb.const import get_cache_dir
 
 DEFAULT_VERSION = "156"
-DEFAULT_OUTPUT_DIR = "output"
 
 
 class SNPLookup:
@@ -43,9 +42,7 @@ class SNPLookup:
 
     def __init__(self, version: str = DEFAULT_VERSION, cache_dir: Optional[str] = None):
         self.version = version
-        self.cache_dir = (
-            Path(cache_dir) if cache_dir else get_cache_dir() / DEFAULT_OUTPUT_DIR
-        )
+        self.cache_dir = Path(cache_dir) if cache_dir else get_cache_dir()
 
     def query_all(self, rsids: list[str]) -> pl.DataFrame:
         """Query all lookup files for a list of rsIDs.
@@ -104,6 +101,18 @@ class SNPLookup:
         if not in_file.exists():
             raise FileNotFoundError(f"dbSNP Parquet file not found: {in_file}")
 
+        subset_df = (
+            pl.scan_parquet(in_file).filter(pl.col("RSID").is_in(rsids)).collect()
+        )
+        return subset_df
+
+    def query_genome(self, rsids: list[str]) -> pl.DataFrame:
+        """Queries the single aggregated genome lookup file for a list of rsIDs."""
+        logger.info(f"Querying dbSNP Parquet genome file for {len(rsids)} rsIDs...")
+        if not rsids:
+            return pl.DataFrame(schema={"RSID": pl.String, "ID": pl.String})
+
+        in_file = self.cache_dir / f"dbSNP_{self.version}.combined.lookup.parquet"
         subset_df = (
             pl.scan_parquet(in_file).filter(pl.col("RSID").is_in(rsids)).collect()
         )

@@ -11,9 +11,10 @@ help:
 	@echo "  clean         - Remove build artifacts and cache files"
 	@echo "  ruff          - Run Ruff on files."
 	@echo "  test          - Run tests with pytest"
-	@echo "  pixi  - Install dependencies with pixi"
+	@echo "  pixi          - Install dependencies with pixi"
 	@echo "  publish       - Build and publish to PyPI"
-	@echo "  dbsnp       - Download dbSNP and build database"
+	@echo "  dbsnp         - Download dbSNP and build database"
+	@echo "  release       - Create GitHub release with version from pyproject.toml"
 
 # Build the package
 build: clean

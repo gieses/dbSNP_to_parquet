@@ -49,10 +49,10 @@ from pyvariantdb.lookup import SNPLookup
 lookup = SNPLookup()
 # P53 mutations, chromosome 17
 rsids = ["rs1042522", "rs17878362", "rs1800372"]
-df_all = lookup.query_all(rsids)
 df_chr = lookup.query_chromosome(rsids, "17")
-print(df_all)
-print(df_chr) 
+df_genome = lookup.query_genome(rsids)
+print(df_chr)
+print(df_genome) 
 ```
 
 ## Processing Pipeline
